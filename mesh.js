@@ -16,12 +16,25 @@ var crypto  = require('crypto'),
     rack    = require('hat').rack(),
     pool    = {};
 
+app.configure(function(){
+  app.set('views', __dirname + '/views');
+  app.set('view engine', 'ejs');
+  app.use(express.bodyParser());
+  app.use(express.methodOverride());
+  app.use(express.cookieParser());
+  app.use(express.session({ secret: 'your secret here' }));
+  app.use(app.router);
+  app.use(express.static(__dirname + '/public'));
+  app.use(express.errorHandler({ dumpExceptions: true, showStack: true })); 
+});
+
 /*
  * HTTP server
  * Render a page displaying the status of the mesh
  */
 app.get('/', function(req, res){
-  res.send(pool);
+  console.log(pool);
+  res.render('index');
 });
 app.listen(80);
 
