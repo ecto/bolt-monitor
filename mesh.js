@@ -1,5 +1,3 @@
-#!/usr/bin/env node
-
 /*
  * Mesh server
  * Cam Pedersen
@@ -16,7 +14,7 @@ var crypto  = require('crypto'),
     app     = express.createServer(),
     net     = require('net'),
     rack    = require('hat').rack(),
-    pool    = [];
+    pool    = {};
 
 /*
  * HTTP server
@@ -33,29 +31,41 @@ app.listen(80);
  * Broadcast emissions
  * Send whispers discretely
  */
-var server = net.createServer(connect);
-server.listen(1234, function(c){
-  console.log('Mesh server started...');
-});
-
-/*
- * Allow a node to connect
- * Generate a name for the node
- * Add node to pool
- * Send confirmation
- */
-var connect = function (c) {
+var server = net.createServer(function (c) {
+  /*
+   * Allow a node to connect
+   * Generate a name for the node
+   * Add node to pool
+   * Send confirmation
+   */
   var id = rack();
   c.write(id);
+  c.on('error', erred);
   c.on('data', incoming);
-  c.on('close', disconnected);
+  c.on('close', disconnect);
   c.id = id;
   pool[id] = {
     c: c,
     join: +new Date()
   }
   console.log(id + ' connected');
-};
+});
+
+server.listen(1234, function(c){
+  console.log(arguments);
+  console.log('Mesh server started...');
+});
+
+server.on('error', function(e){
+  throw Error(e);
+});
+
+/*
+ * Server socket experienced an error
+ */
+var erred = function(e){
+  throw Error(e);
+}
 
 /*
  * Allow a node to disconnect
