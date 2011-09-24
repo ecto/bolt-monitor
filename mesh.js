@@ -54,7 +54,7 @@ app.get('/pool', function(req, res){
 app.listen(80);
 
 var io = require('socket.io').listen(app);
-io.set('log level', 1);
+io.set('log level', 0);
 
 /*
  * TCP server
@@ -65,7 +65,7 @@ io.set('log level', 1);
 var server = net.createServer(function (c) {
   /*
    * Allow a node to connect
-   * Generate a name for the node
+   * Generate an id for the node
    * Add node to pool
    * Send confirmation
    */
@@ -116,9 +116,20 @@ var incoming = function(m){
   try {
     var message = JSON.parse(m);
     console.log(message.id + ' emitted ' + message.hook);
-    broadcast(m);
+    if (message.hook == 'BCHANGENAME') {
+      console.log(message.id + ' requested name ' + message.name);
+      pool[message.name] = pool[message.id];
+      delete pool[message.id];
+      pool[message.name].c.id = message.name;
+      pool[message.name].c.write('BNAMEACCEPT');
+    } else {
+      broadcast(m);
+    }
+    io.sockets.emit('broadcast', m);
   } catch (e) {
-    console.log('Could not parse: ' + m);
+      throw e;
+    console.log('Could not parse:');
+    console.log(m);
   }
 };
 
@@ -131,7 +142,6 @@ function broadcast(message) {
       pool[i].c.write(message);
     }
   }, 1);
-  io.sockets.emit('broadcast', message);
 }
 
 /*
@@ -142,9 +152,9 @@ function generateID(seed){
       uid    = '';
 
   uid = crypto
-        .createHash('sha1')
-        .update(pool.length.toString())
-        .digest('base64');
+       .createHash('sha1')
+       .update(pool.length.toString())
+       .digest('base64');
 
   uid.length = 10;
   console.log(uid);

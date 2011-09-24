@@ -1,9 +1,6 @@
 <div id="home">
   <h2>Nodes</h2>
-  <div id="clients">
-  </div>
+  <div id="clients"></div>
   <h2>Events</h2>
-  <div id="events">
-
-  </div>
+  <div id="events"></div>
 </div>
