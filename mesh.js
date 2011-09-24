@@ -14,11 +14,12 @@ var crypto  = require('crypto'),
     app     = express.createServer(),
     net     = require('net'),
     rack    = require('hat').rack(),
-    pool    = {};
+    pool    = [];
 
 app.configure(function(){
   app.set('views', __dirname + '/views');
   app.set('view engine', 'ejs');
+  app.use(express.logger());
   app.use(express.bodyParser());
   app.use(express.methodOverride());
   app.use(express.cookieParser());
@@ -33,10 +34,27 @@ app.configure(function(){
  * Render a page displaying the status of the mesh
  */
 app.get('/', function(req, res){
-  console.log(pool);
-  res.render('index');
+  res.render('index', {
+    title: 'status'
+  });
 });
+
+app.get('/pool', function(req, res){
+  var p = [];
+  for (var id in pool) {
+    var c = {
+      id: id,
+      join: pool[id].join
+    }
+    p.push(c);
+  }
+  res.send(p);
+});
+
 app.listen(80);
+
+var io = require('socket.io').listen(app);
+io.set('log level', 1);
 
 /*
  * TCP server
@@ -65,7 +83,6 @@ var server = net.createServer(function (c) {
 });
 
 server.listen(1234, function(c){
-  console.log(arguments);
   console.log('Mesh server started...');
 });
 
@@ -114,6 +131,7 @@ function broadcast(message) {
       pool[i].c.write(message);
     }
   }, 1);
+  io.sockets.emit('broadcast', message);
 }
 
 /*

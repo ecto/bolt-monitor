@@ -1,8 +1,91 @@
 body {
-  padding: 50px;
+  padding: 20px;
   font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+  color: #444;
+  text-align: center;
 }
 
 a {
   color: #00B7FF;
+  text-decoration: none;
+}
+
+a:active {
+  color: #00b700;
+}
+
+h1 {
+  font-size: 1.8em;
+}
+
+h2 {
+  font-size: 1.3em;
+}
+
+#status {
+  float: right;
+  color: #ddd;
+}
+
+#wrapper {
+  width: 800px;
+  margin: 0 auto;
+  text-align: left;
+}
+
+#window {
+}
+
+#clients {
+  border-top: 1px solid #aaa;
+}
+
+.client {
+  padding: 20px 0;
+  border-bottom: 1px solid #ccc;
+  cursor: pointer;
+}
+
+.client:hover {
+  background: #fafafa;
+}
+
+.client .status {
+  float: right;
+  padding: 5px 10px;
+  border-radius: 8px;
+  margin-top: -5px;
+}
+
+.client .status.good {
+  background: #94e774;
+  color: #456e35;
+}
+
+.client .status.bad {
+  background: #fbeb6e;
+  color: #857b2c;
+}
+
+.event {
+  padding: 3px 0;
+  font-family: monospace;
+}
+
+@media screen and (max-device-width: 480px){
+
+body{
+  -webkit-text-size-adjust:none;
+  font-size: 12px;
+  padding:5px;
+}
+
+#wrapper {
+  width: 100%;
+}
+
+#window {
+  padding: 0;
+}
+
 }

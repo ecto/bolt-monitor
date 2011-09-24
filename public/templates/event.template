@@ -1,0 +1,7 @@
+<div class="event">
+  <%= id %>
+  <%= hook %>
+  <% if (typeof data != 'undefined') { %>
+    <%= JSON.stringify(data) %>
+  <% } %>
+</div>

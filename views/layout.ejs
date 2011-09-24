@@ -2,9 +2,17 @@
 <html>
   <head>
     <title><%= title %></title>
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0" />
     <link rel='stylesheet' href='/stylesheets/style.css' />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="/javascripts/sammy.js"></script>
+    <script src="/javascripts/plugins/sammy.template-latest.min.js"></script>
+    <script src="/javascripts/app.js"></script>
   </head>
   <body>
-    <%- body %>
+    <div id="wrapper">
+      <%- body %>
+    </div>
   </body>
 </html>
