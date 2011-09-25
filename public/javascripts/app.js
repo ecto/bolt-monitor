@@ -6,7 +6,8 @@
 (function($) {
   var view   = null,
       pool   = [],
-      events = [];
+      events = [],
+      shouldRenderHome = true;
 
   var app = $.sammy('#window', function() {  
     this.use('Template');
@@ -84,6 +85,37 @@
           });
     });
 
+    this.bind('connected', function(e, id){
+      if (id) {
+        var newc = {
+          id: id,
+          join: +new Date()
+        }
+        pool.push(newc);
+        if (view == 'home') this.redirect('#/');
+      }
+    });
+    this.bind('disconnected', function(e, id){
+      if (id) {
+        for (var i in pool) {
+          if (pool[i].id == id) {
+            pool.splice(i, 1);
+            break;
+          }
+        }
+        if (view == 'home' || view == id) this.redirect('#/');
+      }
+    });
+    this.bind('changename', function(e, data){
+      for (var i in pool) {
+        if (pool[i].id == data.old) {
+          pool[i].id = data.now;
+          break;
+        }
+      }
+      if (view == 'home' || view == data.old) this.redirect('#/');
+    });
+
   });
 
   function title(crumb){
@@ -106,6 +138,32 @@
       if (events.length > 100) events.shift();
       app.trigger('event', data);
     });
+
+    socket.on('connect', function (id) {
+      var e = { id: id, hook: 'connected' };
+      events.push(e);
+      if (events.length > 100) events.shift();
+      app.trigger('event', e);
+      app.trigger('connected', id);
+    });
+
+    socket.on('disconnect', function (id) {
+      var e = { id: id, hook: 'disconnected' };
+      events.push(e);
+      if (events.length > 100) events.shift();
+      app.trigger('event', e);
+      app.trigger('disconnected', id);
+    });
+
+    socket.on('changename', function (data) {
+      var e = { id: data.old, hook: 'changed name to ' + data.now };
+      events.push(e);
+      if (events.length > 100) events.shift();
+      app.trigger('event', e);
+      app.trigger('changename', data);
+    });
+
+
     app.run('#/');
   });
 

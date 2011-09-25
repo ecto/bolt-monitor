@@ -80,6 +80,7 @@ var server = net.createServer(function (c) {
     join: +new Date()
   }
   console.log(id + ' connected');
+  io.sockets.emit('connect', id);
 });
 
 server.listen(1234, function(c){
@@ -103,6 +104,7 @@ var erred = function(e){
  */
 var disconnect = function(){
   delete pool[this.id];
+  io.sockets.emit('disconnect', this.id);
   console.log(this.id + ' disconnected');
 }
 
@@ -122,6 +124,7 @@ var incoming = function(m){
       delete pool[message.id];
       pool[message.name].c.id = message.name;
       pool[message.name].c.write('BNAMEACCEPT');
+      io.sockets.emit('changename', { old: message.id, now: message.name });
     } else {
       broadcast(m);
     }
