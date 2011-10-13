@@ -72,6 +72,10 @@ h2 {
   font-family: monospace;
 }
 
+.timestamp {
+  float: right;
+}
+
 @media screen and (max-device-width: 480px){
 
 body{

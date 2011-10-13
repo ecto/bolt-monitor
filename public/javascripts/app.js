@@ -76,12 +76,13 @@
      * Broadcasted event handler
      */
     this.bind('event', function(e, data){
-      var t = e.timestamp;
+      data.t = e.timeStamp;
       if (view != 'home' && view != data.id) return;
       this.render('/templates/event.template', data)
           .then(function(r){
             $(r).prependTo("#events");
             if ($('.event').length > 20) $('.event').last().remove();
+            $(".timestamp").prettyDate();
           });
     });
 
