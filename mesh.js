@@ -103,7 +103,7 @@ var erred = function(e){
  * Remove from pool and send confirmation
  */
 var disconnect = function(){
-  delete pool[this.id];
+  pool.splice(this.id, 1);
   io.sockets.emit('disconnect', this.id);
   console.log(this.id + ' disconnected');
 }
@@ -121,7 +121,7 @@ var incoming = function(m){
     if (message.hook == 'BCHANGENAME') {
       console.log(message.id + ' requested name ' + message.name);
       pool[message.name] = pool[message.id];
-      delete pool[message.id];
+      pool.splice(message.id, 1);
       pool[message.name].c.id = message.name;
       pool[message.name].c.write('BNAMEACCEPT');
       io.sockets.emit('changename', { old: message.id, now: message.name });
