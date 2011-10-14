@@ -8,10 +8,10 @@
     "url": "git://github.com/ecto/bolt-server.git"
   },
   "scripts": {
-    "test": "vows --space test"
+    "test": "vows --spec test"
   },
   "engines": {
-    "node": "~v0.4.*"
+    "node": "*"
   },
   "bin": { "bolt": "./bin/bolt" },
   "dependencies": {},

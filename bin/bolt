@@ -1,0 +1,21 @@
+#!/usr/bin/env node
+
+var parser = require("nomnom");
+
+parser.command('start')
+   .callback(start)
+   .help("start the bolt server");
+
+parser.command('stop')
+   .callback(stop)
+   .help("stop the bolt server");
+
+parser.parseArgs();
+
+function start(){
+  console.log('Starting bolt-server...');
+}
+
+function stop(){
+  console.log('Stopping bolt-server...');
+}
