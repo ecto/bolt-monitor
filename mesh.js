@@ -88,14 +88,14 @@ server.listen(1234, function(c){
 });
 
 server.on('error', function(e){
-  throw Error(e);
+  console.log(e);
 });
 
 /*
  * Server socket experienced an error
  */
 var erred = function(e){
-  throw Error(e);
+  console.log(e);
 }
 
 /*
@@ -103,7 +103,7 @@ var erred = function(e){
  * Remove from pool and send confirmation
  */
 var disconnect = function(){
-  pool.splice(this.id, 1);
+  delete pool[this.id];
   io.sockets.emit('disconnect', this.id);
   console.log(this.id + ' disconnected');
 }
@@ -121,7 +121,7 @@ var incoming = function(m){
     if (message.hook == 'BCHANGENAME') {
       console.log(message.id + ' requested name ' + message.name);
       pool[message.name] = pool[message.id];
-      pool.splice(message.id, 1);
+      delete pool[message.id];
       pool[message.name].c.id = message.name;
       pool[message.name].c.write('BNAMEACCEPT');
       io.sockets.emit('changename', { old: message.id, now: message.name });
@@ -130,9 +130,9 @@ var incoming = function(m){
     }
     io.sockets.emit('broadcast', m);
   } catch (e) {
-      throw e;
     console.log('Could not parse:');
     console.log(m);
+    throw e;
   }
 };
 
@@ -142,7 +142,7 @@ var incoming = function(m){
 function broadcast(message) {
   setTimeout(function(){ // to not wait for loop to finish
     for (var i in pool) {
-      pool[i].c.write(message);
+      if (pool[i].c.writable) pool[i].c.write(message);
     }
   }, 1);
 }
