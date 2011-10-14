@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 
-var parser = require("nomnom");
+var parser  = require('nomnom'),
+    forever = require('forever');
 
 parser.command('start')
    .callback(start)
@@ -14,8 +15,12 @@ parser.parseArgs();
 
 function start(){
   console.log('Starting bolt-server...');
+  forever.startServer(__dirname + '/../mesh.js');
 }
 
 function stop(){
   console.log('Stopping bolt-server...');
+  console.log(forever.list(, function(){
+    console.log(arguments);
+  }));
 }
