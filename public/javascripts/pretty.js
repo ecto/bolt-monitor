@@ -1,12 +1,13 @@
 // http://ejohn.org/blog/javascript-pretty-date/
 function prettyDate(time){
-  var date = new Date(time),
+  var date = +new Date(time),
       diff = (+new Date() - time) / 1000,
   day_diff = Math.floor(diff / 86400);
 
   if ( isNaN(day_diff) || day_diff < 0 || day_diff >= 31 ) return;
   return day_diff == 0 && (
-   diff < 60 && "just now" ||
+   diff < 2 && "just now" ||
+   diff < 60 && Math.floor(diff) + " seconds ago" ||
    diff < 120 && "1 minute ago" ||
    diff < 3600 && Math.floor( diff / 60 ) + " minutes ago" ||
    diff < 7200 && "1 hour ago" ||
@@ -20,7 +21,10 @@ function prettyDate(time){
 if (typeof $ != "undefined")
   $.fn.prettyDate = function(){
     return this.each(function(){
-      var date = prettyDate($(this).text());
-      if (date) $(this).text(date);
+      if (!$(this).attr('data-time')) {
+        $(this).attr('data-time', $(this).text());
+      }
+      var pretty = prettyDate($(this).attr('data-time'));
+      if (pretty) $(this).text(pretty);
     });
   };
