@@ -1,7 +1,8 @@
 #!/usr/bin/env node
 
 var parser  = require('nomnom'),
-    forever = require('forever');
+    forever = require('forever'),
+    colors  = require('colors');
 
 parser.command('start')
    .callback(start)
@@ -14,13 +15,30 @@ parser.command('stop')
 parser.parseArgs();
 
 function start(){
-  console.log('Starting bolt-server...');
-  forever.startServer(__dirname + '/../mesh.js');
+  if (process.env.USER != 'root') {
+    console.log('I refuse to start without permission, good sir!'.red);
+    console.log('Try: ' + 'sudo !!'.green);
+  } else {
+    console.log('Starting bolt-server...'.green);
+    var file = __dirname + '/../mesh.js';
+    forever.list(null, function(err, procs){
+      var running = false;
+      if (procs) {
+        for (var i in procs) {
+          if (procs[i].file == file) {
+            running = true;
+            break;
+          }
+        }
+      }
+      if (!running) forever.cli.start(file, {}, true);
+      else console.log('Bolt is already running! I disincline to acquiesce to your request.'.red);
+    });
+  }
 }
 
 function stop(){
   console.log('Stopping bolt-server...');
-  console.log(forever.list(, function(){
-    console.log(arguments);
-  }));
+  var file = __dirname + '/../mesh.js';
+  forever.cli.stop(file);
 }
