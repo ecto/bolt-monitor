@@ -1,19 +1,28 @@
 {
   "author": "Cam Pedersen <cam@onswipe.com> (http://campedersen.com/)",
   "name": "bolt-server",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "homepage": "http://bolt.io/",
   "repository": {
     "type": "git",
     "url": "git://github.com/ecto/bolt-server.git"
   },
   "scripts": {
-    "test": "vows --spec test"
+    "test": "vows --spec test/*"
   },
   "engines": {
     "node": "*"
   },
   "bin": { "bolt": "./bin/bolt" },
-  "dependencies": {},
-  "devDependencies": {}
+  "dependencies": {
+    "nomnom": "1.0.x",
+    "colors": "0.x.x",
+    "forever": "0.7.x",
+    "hat": "0.0.x",
+    "express": "2.4.x",
+    "ejs": "0.4.x"
+  },
+  "devDependencies": {
+    "vows": "0.5.x"
+  }
 }
