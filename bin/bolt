@@ -16,10 +16,10 @@ parser.parseArgs();
 
 function start(){
   if (process.env.USER != 'root') {
-    console.log('I refuse to start without permission, good sir!'.red);
+    console.log('I refuse to run without permission, good sir!'.red);
     console.log('Try: ' + 'sudo !!'.green);
   } else {
-    console.log('Starting bolt-server...'.green);
+    console.log('Starting bolt-server...'.magenta);
     var file = __dirname + '/../mesh.js';
     forever.list(null, function(err, procs){
       var running = false;
@@ -31,14 +31,22 @@ function start(){
           }
         }
       }
-      if (!running) forever.cli.start(file, {}, true);
-      else console.log('Bolt is already running! I disincline to acquiesce to your request.'.red);
+      if (!running) {
+        forever.cli.start(file, {}, true);
+        console.log('Done!'.green);
+      } else console.log('Bolt is already running! I disincline to acquiesce to your request.'.red);
     });
   }
 }
 
 function stop(){
-  console.log('Stopping bolt-server...');
-  var file = __dirname + '/../mesh.js';
-  forever.cli.stop(file);
+  if (process.env.USER != 'root') {
+    console.log('I refuse to run without permission, good sir!'.red);
+    console.log('Try: ' + 'sudo !!'.green);
+  } else {
+    console.log('Stopping bolt-server...'.magenta);
+    var file = __dirname + '/../mesh.js';
+    forever.cli.stop(file);
+    console.log('Done!'.green);
+  }
 }
