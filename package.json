@@ -3,6 +3,7 @@
   "name": "bolt-server",
   "version": "0.0.3",
   "homepage": "http://bolt.io/",
+  "preferGlobal": true,
   "repository": {
     "type": "git",
     "url": "git://github.com/ecto/bolt-server.git"
