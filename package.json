@@ -1,7 +1,7 @@
 {
   "author": "Cam Pedersen <cam@onswipe.com> (http://campedersen.com/)",
   "name": "bolt-server",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "homepage": "http://bolt.io/",
   "preferGlobal": true,
   "repository": {
@@ -23,6 +23,7 @@
     "express": "2.4.x",
     "ejs": "0.4.x",
     "jeans": "0.1.x"
+    "socket.io": "0.8.x"
   },
   "devDependencies": {
     "vows": "0.5.x"
