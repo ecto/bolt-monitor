@@ -2,17 +2,35 @@
 
 var parser  = require('nomnom'),
     forever = require('forever'),
-    colors  = require('colors');
+    colors  = require('colors'),
+    jeans   = require('jeans');
 
 parser.command('start')
-   .callback(start)
-   .help("start the bolt server");
+  .callback(start)
+  .help('start the bolt server');
 
 parser.command('stop')
-   .callback(stop)
-   .help("stop the bolt server");
+  .callback(stop)
+  .help('stop the bolt server');
 
-parser.parseArgs();
+parser.command('set')
+  .callback(set)
+  .help('set a configuration variable');
+
+if (!process.argv[2]) process.argv[2] = '-h';
+
+parser
+  .opts({
+    version: {
+      abbr: 'v',
+      flag: true,
+      help: 'print version and exit',
+      callback: function() {
+         return "v0.0.2";
+      }
+    }
+  })
+  .parseArgs();
 
 function start(){
   if (process.env.USER != 'root') {
@@ -48,5 +66,16 @@ function stop(){
     var file = __dirname + '/../mesh.js';
     forever.cli.stop(file);
     console.log('Done!'.green);
+  }
+}
+
+function set(){
+  var key = process.argv[3],
+      value = process.argv[4];
+  if (!key || !value) {
+    console.log('Missing required parameters'.red);
+  } else {
+    jeans.set(key, value);
+    console.log('Saved!'.green);
   }
 }

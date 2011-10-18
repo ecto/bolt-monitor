@@ -20,7 +20,8 @@
     "forever": "0.7.x",
     "hat": "0.0.x",
     "express": "2.4.x",
-    "ejs": "0.4.x"
+    "ejs": "0.4.x",
+    "jeans": "0.1.x"
   },
   "devDependencies": {
     "vows": "0.5.x"
