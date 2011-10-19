@@ -164,11 +164,13 @@
       app.trigger('changename', data);
     });
 
+    app.run('#/');
+  });
+
+  $().ready(function(){
     $('#toggleNodes').click(function(){
       $('#clients').toggle();
     });
-
-    app.run('#/');
   });
 
 })(jQuery);
