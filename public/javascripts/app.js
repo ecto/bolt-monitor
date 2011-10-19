@@ -38,11 +38,7 @@
         .then(function(d){
           $('#events').html(d);
         });
-
-      $('#toggleNodes').click(function(){
-        $('#clients').toggle();
-      });
-
+      
     });
 
 
