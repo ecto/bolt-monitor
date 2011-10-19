@@ -164,6 +164,9 @@
       app.trigger('changename', data);
     });
 
+    $('#toggleNodes').click(function(){
+      $('#clients').toggle();
+    });
 
     app.run('#/');
   });

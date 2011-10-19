@@ -1,4 +1,5 @@
 <div id="home">
+  <a id="toggleNodes">Toggle</a>
   <h2>Nodes</h2>
   <div id="clients"></div>
   <h2>Events</h2>
