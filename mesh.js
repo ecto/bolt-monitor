@@ -120,8 +120,7 @@ var incoming = function(m){
     console.log(message.id + ' emitted ' + message.hook);
     if (message.hook == 'BCHANGENAME') {
       console.log(message.id + ' requested name ' + message.name);
-      var found = false,
-          name;
+      var found = false, name;
       for (var i in pool) {
         if (pool[i].id == message.name) {
           found = true;
@@ -129,15 +128,16 @@ var incoming = function(m){
         }
       }
       if (found) {
-        name = message.name + '-' + generateID();
+        name = message.name + '-' + rack();
       } else {
         name = message.name;
       }
       pool[name] = pool[message.id];
       delete pool[message.id];
       pool[name].c.id = name;
-      pool[name].c.write('BNAMEACCEPT:' + name);
+      pool[name].c.write('BNAMEACCEPT::' + name);
       io.sockets.emit('changename', { old: message.id, now: name });
+      delete name;
     } else {
       broadcast(m);
     }
