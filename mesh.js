@@ -56,6 +56,8 @@ app.listen(80);
 var io = require('socket.io').listen(app);
 io.set('log level', 0);
 
+var delimiter = '::::/bm/::::';
+
 /*
  * TCP server
  * Handle all mesh nodes
@@ -70,7 +72,7 @@ var server = net.createServer(function (c) {
    * Send confirmation
    */
   var id = rack();
-  c.write(id);
+  c.write(id + delimiter);
   c.on('error', erred);
   c.on('data', incoming);
   c.on('close', disconnect);
@@ -110,11 +112,21 @@ var disconnect = function(){
 
 /*
  * TCP server recieved data
- * Handle event emissions
- * Handle node whipsers
  */
 var incoming = function(m){
   m = m.toString();
+  var raw = m.split(delimiter);
+  if (raw.length > 1) raw.pop();
+  for (var i in raw) {
+    processMessage(raw[i]);
+  }
+}
+
+/*
+ * Handle event emissions
+ * Handle node whipsers
+ */
+var processMessage = function(m){
   try {
     var message = JSON.parse(m);
     console.log(message.id + ' emitted ' + message.hook);
@@ -135,7 +147,7 @@ var incoming = function(m){
       pool[name] = pool[message.id];
       delete pool[message.id];
       pool[name].c.id = name;
-      pool[name].c.write('BNAMEACCEPT::' + name);
+      pool[name].c.write('BNAMEACCEPT::' + name + delimiter);
       io.sockets.emit('changename', { old: message.id, now: name });
       delete name;
     } else {
@@ -155,7 +167,7 @@ var incoming = function(m){
 function broadcast(message) {
   setTimeout(function(){ // to not wait for loop to finish
     for (var i in pool) {
-      if (pool[i].c.writable) pool[i].c.write(message);
+      if (pool[i].c.writable) pool[i].c.write(message + delimiter);
     }
   }, 1);
 }
