@@ -39,6 +39,10 @@
           $('#events').html(d);
         });
 
+      $('#toggleNodes').click(function(){
+        $('#clients').toggle();
+      });
+
     });
 
 
@@ -165,12 +169,6 @@
     });
 
     app.run('#/');
-  });
-
-  $().ready(function(){
-    $('#toggleNodes').click(function(){
-      $('#clients').toggle();
-    });
   });
 
 })(jQuery);
