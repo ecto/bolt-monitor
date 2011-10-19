@@ -26,7 +26,7 @@ parser
       flag: true,
       help: 'print version and exit',
       callback: function() {
-         return "v0.0.6";
+         return "v0.0.7";
       }
     }
   })
