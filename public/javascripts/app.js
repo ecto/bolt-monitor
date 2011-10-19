@@ -169,3 +169,7 @@
   });
 
 })(jQuery);
+
+setInterval(function(){
+  $(".timestamp").prettyDate();
+}), 1000;
