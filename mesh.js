@@ -122,7 +122,7 @@ var incoming = function(m){
       console.log(message.id + ' requested name ' + message.name);
       var found = false, name;
       for (var i in pool) {
-        if (pool[i].id == message.name) {
+        if (pool[i].name == message.name) {
           found = true;
           break;
         }
