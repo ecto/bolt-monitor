@@ -1,5 +1,5 @@
 <div id="home">
-  <a onclick="javascript:$('#clients').toggle();">Toggle</a>
+  <a id="toggleNodes" onclick="javascript:$('#clients').toggle();">Toggle</a>
   <h2>Nodes</h2>
   <div id="clients"></div>
   <h2>Events</h2>
