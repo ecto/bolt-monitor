@@ -56,7 +56,8 @@ app.listen(80);
 var io = require('socket.io').listen(app);
 io.set('log level', 0);
 
-var delimiter = '::::/bm/::::';
+var delimiter = '::::/bm/::::',
+    messageBuffer = '';
 
 /*
  * TCP server
