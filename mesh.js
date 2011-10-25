@@ -129,7 +129,7 @@ var processBuffer = function(){
     processMessage(raw[i]);
     raw.splice(i, 1);
   }
-  messageBuffer = raw.join('') + messageBuffer;
+  messageBuffer = raw.join(delimiter) + messageBuffer;
 }
 
 /*
