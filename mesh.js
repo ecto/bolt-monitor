@@ -81,7 +81,8 @@ var server = net.createServer(function (c) {
     c: c,
     join: +new Date()
   }
-  console.log(id + ' connected');
+  console.log(id + ' connected from ');
+  console.log(c);
   io.sockets.emit('connect', id);
 });
 
@@ -115,11 +116,19 @@ var disconnect = function(){
  */
 var incoming = function(m){
   m = m.toString();
-  var raw = m.split(delimiter);
-  if (raw.length > 1) raw.pop();
+  messageBuffer += m;
+  processBuffer();
+}
+
+var processBuffer = function(){
+  var raw = messageBuffer.split(delimiter);
+  messageBuffer.length = 0;
+  //if (raw.length > 1) raw.pop();
   for (var i in raw) {
     processMessage(raw[i]);
+    raw.splice(i, 1);
   }
+  messageBuffer = raw.join('') + messageBuffer;
 }
 
 /*
@@ -157,7 +166,6 @@ var processMessage = function(m){
   } catch (e) {
     console.log('Could not parse:');
     console.log(m);
-    throw e;
   }
 };
 
