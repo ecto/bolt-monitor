@@ -126,8 +126,8 @@ var processBuffer = function(){
   messageBuffer.length = 0;
   //if (raw.length > 1) raw.pop();
   for (var i in raw) {
-    processMessage(raw[i]);
-    raw.splice(i, 1);
+    if (processMessage(raw[i]))
+      raw.splice(i, 1);
   }
   messageBuffer = raw.join(delimiter) + messageBuffer;
 }
@@ -164,9 +164,11 @@ var processMessage = function(m){
       broadcast(m);
     }
     io.sockets.emit('broadcast', m);
+    return true;
   } catch (e) {
     console.log('Could not parse:');
     console.log(m);
+    return false;
   }
 };
 
