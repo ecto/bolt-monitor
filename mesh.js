@@ -126,7 +126,7 @@ var processBuffer = function(){
   messageBuffer.length = 0;
   //if (raw.length > 1) raw.pop();
   for (var i in raw) {
-    if (processMessage(raw[i]))
+    if (processMessage(raw[i]) || message == '')
       raw.splice(i, 1);
   }
   messageBuffer = raw.join(delimiter) + messageBuffer;
