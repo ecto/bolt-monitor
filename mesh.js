@@ -117,6 +117,8 @@ var disconnect = function(){
 var incoming = function(m){
   m = m.toString();
   messageBuffer += m;
+  console.log(m);
+  console.log(messageBuffer);
   processBuffer();
 }
 
