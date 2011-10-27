@@ -117,15 +117,12 @@ var disconnect = function(){
 var incoming = function(m){
   m = m.toString();
   messageBuffer += m;
-  console.log(m);
-  console.log(messageBuffer);
   processBuffer();
 }
 
 var processBuffer = function(){
   var raw = messageBuffer.split(delimiter);
   messageBuffer = '';
-  //if (raw.length > 1) raw.pop();
   for (var i in raw) {
     if (processMessage(raw[i]) || raw[i] == '')
       raw.splice(i, 1);
