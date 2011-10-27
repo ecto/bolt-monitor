@@ -82,8 +82,7 @@ var server = net.createServer(function (c) {
     c: c,
     join: +new Date()
   }
-  console.log(id + ' connected from ');
-  console.log(c);
+  console.log(id + ' connected from ' + c.remoteAddress);
   io.sockets.emit('connect', id);
 });
 
