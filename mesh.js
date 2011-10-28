@@ -73,7 +73,14 @@ var server = net.createServer(function (c) {
    * Send confirmation
    */
   var id = rack();
-  c.write(id);
+  var reply = {
+    id: 'server',
+    hook: 'BINIT',
+    data: {
+      id: id
+    }
+  }
+  c.write(JSON.stringify(reply));
   c.on('error', erred);
   c.on('data', incoming);
   c.on('close', disconnect);
@@ -98,6 +105,7 @@ server.on('error', function(e){
  * Server socket experienced an error
  */
 var erred = function(e){
+    throw e
   console.log(e);
 }
 
@@ -118,9 +126,8 @@ var incoming = function(m){
   m = m.toString();
   messageBuffer += m;
   var raw = knife.parse(messageBuffer, true);
-  console.log(raw);
-  for (var i in raw.results) {
-    processMessage(raw.results[i]);
+  for (var i in raw.result) {
+    processMessage(raw.result[i]);
   }
   messageBuffer = raw.remainder;
 }
@@ -131,37 +138,40 @@ var incoming = function(m){
  */
 var processMessage = function(m){
   try {
-    var message = JSON.parse(m);
-    console.log(message.id + ' emitted ' + message.hook);
-    if (message.hook == 'BCHANGENAME') {
-      console.log(message.id + ' requested name ' + message.name);
-      var found = false, name;
+    console.log(m.id + ' emitted ' + m.hook);
+    if (m.hook == 'BCHANGENAME') {
+      console.log(m.id + ' requested name ' + m.data.name);
+      var found = false,
+          name;
       for (var i in pool) {
-        if (pool[i].c.id == message.name) {
+        if (pool[i].c.id == m.data.name) {
           found = true;
           break;
         }
       }
       if (found) {
-        name = message.name + '-' + rack();
+        name = m.data.name + '-' + rack();
       } else {
-        name = message.name;
+        name = m.data.name;
       }
-      pool[name] = pool[message.id];
-      delete pool[message.id];
+      pool[name] = pool[m.id];
+      delete pool[m.id];
       pool[name].c.id = name;
-      pool[name].c.write('BNAMEACCEPT::' + name);
-      io.sockets.emit('changename', { old: message.id, now: name });
+      var reply = {
+        id: 'server',
+        hook: 'BNAMEACCEPT',
+        data: {
+          name: name
+        }
+      }
+      pool[name].c.write(JSON.stringify(reply));
       delete name;
     } else {
       broadcast(m);
     }
-    io.sockets.emit('broadcast', m);
-    return true;
   } catch (e) {
     console.log('Could not parse:');
     console.log(m);
-    return false;
   }
 };
 
@@ -170,9 +180,11 @@ var processMessage = function(m){
  */
 function broadcast(message) {
   setTimeout(function(){ // to not wait for loop to finish
+    if (typeof message != 'string') message = JSON.stringify(message);
     for (var i in pool) {
       if (pool[i].c.writable) pool[i].c.write(message);
     }
+    io.sockets.emit('broadcast', message);
   }, 1);
 }
 
