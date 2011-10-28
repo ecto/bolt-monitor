@@ -14,6 +14,7 @@ var crypto  = require('crypto'),
     app     = express.createServer(),
     net     = require('net'),
     rack    = require('hat').rack(),
+    knife   = require('knife'),
     pool    = [];
 
 app.configure(function(){
@@ -56,8 +57,7 @@ app.listen(80);
 var io = require('socket.io').listen(app);
 io.set('log level', 0);
 
-var delimiter = '::::/bm/::::',
-    messageBuffer = '';
+var messageBuffer = '';
 
 /*
  * TCP server
@@ -73,7 +73,7 @@ var server = net.createServer(function (c) {
    * Send confirmation
    */
   var id = rack();
-  c.write(id + delimiter);
+  c.write(id);
   c.on('error', erred);
   c.on('data', incoming);
   c.on('close', disconnect);
@@ -117,17 +117,12 @@ var disconnect = function(){
 var incoming = function(m){
   m = m.toString();
   messageBuffer += m;
-  processBuffer();
-}
-
-var processBuffer = function(){
-  var raw = messageBuffer.split(delimiter);
-  messageBuffer = '';
-  for (var i in raw) {
-    if (processMessage(raw[i]) || raw[i] == '')
-      raw.splice(i, 1);
+  var raw = knife.parse(messageBuffer, true);
+  console.log(raw);
+  for (var i in raw.results) {
+    processMessage(raw.results[i]);
   }
-  messageBuffer = raw.join(delimiter) + messageBuffer;
+  messageBuffer = raw.remainder;
 }
 
 /*
@@ -155,7 +150,7 @@ var processMessage = function(m){
       pool[name] = pool[message.id];
       delete pool[message.id];
       pool[name].c.id = name;
-      pool[name].c.write('BNAMEACCEPT::' + name + delimiter);
+      pool[name].c.write('BNAMEACCEPT::' + name);
       io.sockets.emit('changename', { old: message.id, now: name });
       delete name;
     } else {
@@ -176,7 +171,7 @@ var processMessage = function(m){
 function broadcast(message) {
   setTimeout(function(){ // to not wait for loop to finish
     for (var i in pool) {
-      if (pool[i].c.writable) pool[i].c.write(message + delimiter);
+      if (pool[i].c.writable) pool[i].c.write(message);
     }
   }, 1);
 }
