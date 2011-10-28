@@ -82,8 +82,7 @@ var server = net.createServer(function (c) {
     c: c,
     join: +new Date()
   }
-  console.log(id + ' connected from ');
-  console.log(c);
+  console.log(id + ' connected from ' + c.remoteAddress);
   io.sockets.emit('connect', id);
 });
 
@@ -123,11 +122,10 @@ var incoming = function(m){
 
 var processBuffer = function(){
   var raw = messageBuffer.split(delimiter);
-  messageBuffer.length = 0;
-  //if (raw.length > 1) raw.pop();
+  messageBuffer = '';
   for (var i in raw) {
-    processMessage(raw[i]);
-    raw.splice(i, 1);
+    if (processMessage(raw[i]) || raw[i] == '')
+      raw.splice(i, 1);
   }
   messageBuffer = raw.join(delimiter) + messageBuffer;
 }
@@ -164,9 +162,11 @@ var processMessage = function(m){
       broadcast(m);
     }
     io.sockets.emit('broadcast', m);
+    return true;
   } catch (e) {
     console.log('Could not parse:');
     console.log(m);
+    return false;
   }
 };
 
