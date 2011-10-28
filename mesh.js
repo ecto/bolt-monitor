@@ -125,7 +125,7 @@ var disconnect = function(){
 var incoming = function(m){
   m = m.toString();
   messageBuffer += m;
-  var raw = knife.parse(messageBuffer, true);
+  var raw = knife.parse(messageBuffer);
   for (var i in raw.result) {
     processMessage(raw.result[i]);
   }
