@@ -1,8 +1,0 @@
-<div class="event">
-  <%= id %>
-  <%= hook %>
-  <% if (typeof data != 'undefined') { %>
-    <%= JSON.stringify(data) %>
-  <% } %>
-  <span class="timestamp"><%= t %></span>
-</div>

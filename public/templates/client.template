@@ -1,6 +1,0 @@
-<div id="client">
-  <h2>Information</h2>
-  <div class="meta"><%= client.id %> connected <%= new Date(client.join).toString() %></div>
-  <h2>Events</h2>
-  <div id="events"></div>
-</div>

@@ -1,4 +1,0 @@
-<div class="client" onclick="location.href = '#/<%= id %>'">
-  <div class="status good">online</div>
-  <%= id %>
-</div>
