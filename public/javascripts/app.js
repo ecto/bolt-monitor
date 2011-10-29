@@ -20,7 +20,7 @@ socket.on('broadcast', function (data) {
   if ($('.event').length > 100) $('.event').last().remove();
 });
 
-socket.on('connect', function (id) {
+socket.on('connection', function (id) {
   if (!id) return;
   var row = $('<tr class="event connect" />');
   $('<td />').text(id + ' connected').prependTo(row);
@@ -29,7 +29,7 @@ socket.on('connect', function (id) {
   if ($('.event').length > 100) $('.event').last().remove();
 });
 
-socket.on('disconnect', function (id) {
+socket.on('disconnection', function (id) {
   if (!id) return;
   var row = $('<tr class="event disconnect" />');
   $('<td />').text(id + ' disconnected').prependTo(row);

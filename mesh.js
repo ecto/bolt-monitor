@@ -90,7 +90,7 @@ var server = net.createServer(function (c) {
     join: +new Date()
   }
   console.log(id + ' connected from ' + c.remoteAddress);
-  io.sockets.emit('connect', id);
+  io.sockets.emit('connection', id);
 });
 
 server.listen(1234, function(c){
@@ -115,7 +115,7 @@ var erred = function(e){
  */
 var disconnect = function(){
   delete pool[this.id];
-  io.sockets.emit('disconnect', this.id);
+  io.sockets.emit('disconnection', this.id);
   console.log(this.id + ' disconnected');
 }
 
@@ -165,6 +165,10 @@ var processMessage = function(m){
         }
       }
       pool[name].c.write(JSON.stringify(reply));
+      io.sockets.emit('changename', {
+        old: m.id,
+        now: name
+      });
       delete name;
     } else {
       broadcast(m);
