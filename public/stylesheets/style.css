@@ -57,6 +57,10 @@ tr, td {
   width: 100%;
 }
 
+.event .data {
+  color: #a7a898;
+}
+
 .event.connect {
   color: green;
 }

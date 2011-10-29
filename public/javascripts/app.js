@@ -13,6 +13,7 @@ socket.on('broadcast', function (data) {
     return;
   }
   var row = $('<tr class="event" />');
+  if (data.data) $('<td class="data" />').text(JSON.stringify(data.data)).prependTo(row);
   $('<td />').text(data.id + ' ' + data.hook).prependTo(row);
   $('<td class="timestamp" />').text(+new Date).prependTo(row);
   row.prependTo($('#window'));
