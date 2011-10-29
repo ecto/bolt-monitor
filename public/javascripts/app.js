@@ -3,172 +3,49 @@
  * Cam Pedersen
  */
 
-(function($) {
-  var view   = null,
-      pool   = [],
-      events = [],
-      shouldRenderHome = true;
+var socket = io.connect();
 
-  var app = $.sammy('#window', function() {  
-    this.use('Template');
-
-    /*
-     * GET /
-     */
-    this.get('#/', function(context) {
-      view = 'home';
-      title();
-
-      this
-        .render('/templates/home.template')
-        .swap();
-
-      this.load('/pool')
-        .then(function(clients){
-          pool = clients;
-          context.log(pool);
-          return clients;
-        })
-        .renderEach('/templates/item.template')
-        .then(function(clients){
-          $('#clients').html(clients);
-        });
-
-      this.renderEach('/templates/event.template', events.slice(-19).reverse())
-        .then(function(d){
-          $('#events').html(d);
-        });
-      
-    });
-
-
-    /*
-     * GET /id
-     */
-    this.get('#/:id', function(context) {
-      var id = this.params['id'];
-      view = id;
-      title([id]);
-      var i;
-      for (var j in pool) {
-        if (pool[j].id == id) {
-          i = j;
-          break;
-        }
-      }
-      if (!i || !pool[i]) this.redirect('#/');
-      else {
-        this.render('/templates/client.template', { client: pool[i] }).swap();
-
-        var cevents = [];
-        for (var i in events) {
-          if (events[i].id == id) cevents.push(events[i]);
-          if (cevents.length == 20) break;
-        }
-        this.renderEach('/templates/event.template', cevents.reverse())
-            .then(function(d){
-              $('#events').html(d);
-            });
-      }
-    });
-
-    /*
-     * Broadcasted event handler
-     */
-    this.bind('event', function(e, data){
-      data.t = e.timeStamp;
-      if (view != 'home' && view != data.id) return;
-      this.render('/templates/event.template', data)
-          .then(function(r){
-            $(r).prependTo("#events");
-            if ($('.event').length > 20) $('.event').last().remove();
-            $(".timestamp").prettyDate();
-          });
-    });
-
-    this.bind('connected', function(e, id){
-      if (id) {
-        var newc = {
-          id: id,
-          join: +new Date()
-        }
-        pool.push(newc);
-        if (view == 'home') this.redirect('#/');
-      }
-    });
-    this.bind('disconnected', function(e, id){
-      if (id) {
-        for (var i in pool) {
-          if (pool[i].id == id) {
-            pool.splice(i, 1);
-            break;
-          }
-        }
-        if (view == 'home' || view == id) this.redirect('#/');
-      }
-    });
-    this.bind('changename', function(e, data){
-      for (var i in pool) {
-        if (pool[i].id == data.old) {
-          pool[i].id = data.now;
-          break;
-        }
-      }
-      if (view == 'home' || view == data.old) this.redirect('#/');
-    });
-
-  });
-
-  function title(crumb){
-      var start = '<a href="/#/">status</a>';
-      crumb = (crumb ? ' / ' + crumb : '');
-      var title = start + crumb;
-      $('#title').html(title);
+socket.on('broadcast', function (data) {
+  try {
+    data = JSON.parse(data);
+  } catch (e) {
+    console.log('Could not parse: ' + data);
+    return;
   }
-      
-  $(function() {
-    var socket = io.connect();
-    socket.on('broadcast', function (data) {
-      try {
-        data = JSON.parse(data);
-      } catch (e) {
-        console.log('Could not parse: ' + data);
-        return;
-      }
-      events.push(data);
-      if (events.length > 100) events.shift();
-      app.trigger('event', data);
-    });
+  var row = $('<tr class="event" />');
+  $('<td />').text(data.id + ' ' + data.hook).prependTo(row);
+  $('<td class="timestamp" />').text(+new Date).prependTo(row);
+  row.prependTo($('#window'));
+  if ($('.event').length > 100) $('.event').last().remove();
+});
 
-    socket.on('connect', function (id) {
-      var e = { id: id, hook: 'connected' };
-      events.push(e);
-      if (events.length > 100) events.shift();
-      app.trigger('event', e);
-      app.trigger('connected', id);
-    });
+socket.on('connect', function (id) {
+  if (!id) return;
+  var row = $('<tr class="event connect" />');
+  $('<td />').text(id + ' connected').prependTo(row);
+  $('<td class="timestamp" />').text(+new Date).prependTo(row);
+  row.prependTo($('#window'));
+  if ($('.event').length > 100) $('.event').last().remove();
+});
 
-    socket.on('disconnect', function (id) {
-      var e = { id: id, hook: 'disconnected' };
-      events.push(e);
-      if (events.length > 100) events.shift();
-      app.trigger('event', e);
-      app.trigger('disconnected', id);
-    });
+socket.on('disconnect', function (id) {
+  if (!id) return;
+  var row = $('<tr class="event disconnect" />');
+  $('<td />').text(id + ' disconnected').prependTo(row);
+  $('<td class="timestamp" />').text(+new Date).prependTo(row);
+  row.prependTo($('#window'));
+  if ($('.event').length > 100) $('.event').last().remove();
+});
 
-    socket.on('changename', function (data) {
-      var e = { id: data.old, hook: 'changed name to ' + data.now };
-      events.push(e);
-      if (events.length > 100) events.shift();
-      app.trigger('event', e);
-      app.trigger('changename', data);
-    });
-
-    app.run('#/');
-  });
-
-})(jQuery);
+socket.on('changename', function (data) {
+  var row = $('<tr class="event changename" />');
+  $('<td />').text(data.old + ' changed name to ' + data.now).prependTo(row);
+  $('<td class="timestamp" />').text(+new Date).prependTo(row);
+  row.prependTo($('#window'));
+  if ($('.event').length > 100) $('.event').last().remove();
+});
 
 setInterval(function(){
   $(".timestamp").prettyDate();
 }), 1000;
+

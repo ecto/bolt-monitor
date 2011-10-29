@@ -1,8 +1,9 @@
 body {
-  padding: 20px;
   font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
   color: #444;
   text-align: center;
+  margin: 0;
+  padding: 0;
 }
 
 a {
@@ -14,72 +15,65 @@ a:active {
   color: #00b700;
 }
 
-h1 {
-  font-size: 1.8em;
-}
-
-h2 {
-  font-size: 1.3em;
-}
-
-#toggleNodes {
-  float: right;
-  cursor: pointer;
-}
-
-#status {
-  float: right;
-  color: #ddd;
-}
-
 #wrapper {
-  width: 800px;
-  margin: 0 auto;
   text-align: left;
 }
 
+#status {
+  display: none;
+}
+
 #window {
+}
+
+tr, td {
+  margin: 0;
+  padding: 0;
 }
 
 #clients {
   border-top: 1px solid #aaa;
 }
 
-.client {
-  padding: 20px 0;
-  border-bottom: 1px solid #ccc;
-  cursor: pointer;
+#window tr td:first-child {
+  padding: 5px;
+  background: #ececec;
+  color: #acacac;
+  border-right: 1px solid #ddd;
+  width: 100px;
+  text-align: right;
 }
 
-.client:hover {
-  background: #fafafa;
-}
-
-.client .status {
-  float: right;
-  padding: 5px 10px;
-  border-radius: 8px;
-  margin-top: -5px;
-}
-
-.client .status.good {
-  background: #94e774;
-  color: #456e35;
-}
-
-.client .status.bad {
-  background: #fbeb6e;
-  color: #857b2c;
+#window tr td:nth-child(2) {
+  padding: 5px;
+  vertical-align: middle;
+  background: #fff;
 }
 
 .event {
-  padding: 3px 0;
-  font-family: monospace;
+  font-family: 'Bitstream Vera Sans Mono','Courier',monospace;
+  font-size: 12px;
+  height: 20px;
+  width: 100%;
+}
+
+.event.connect {
+  color: green;
+}
+
+.event.disconnect {
+  color: red;
+}
+
+.event.changename {
+  color: blue;
 }
 
 .timestamp {
   float: right;
 }
+
+
 
 @media screen and (max-device-width: 480px){
 
