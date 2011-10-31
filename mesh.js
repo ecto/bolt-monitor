@@ -105,8 +105,9 @@ server.on('error', function(e){
  * Server socket experienced an error
  */
 var erred = function(e){
-    throw e
-  console.log(e);
+  console.log('---------------------------');
+  console.log(arguments);
+  console.log('---------------------------');
 }
 
 /*
