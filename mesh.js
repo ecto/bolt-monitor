@@ -33,7 +33,7 @@ app.configure(function(){
 
 ekg.on('proc', function(proc){
   console.log(proc.cpuPercent);
-  if (proc.cpuPercent > 0.8) {
+  if (proc.cpuPercent > 80) {
     console.log('Process eating too much CPU. Exiting.');
     process.exit();
   }
