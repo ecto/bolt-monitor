@@ -15,6 +15,7 @@ var crypto  = require('crypto'),
     net     = require('net'),
     rack    = require('hat').rack(),
     knife   = require('knife'),
+    ekg     = require('ekg').start(1000),
     pool    = [];
 
 app.configure(function(){
@@ -28,6 +29,13 @@ app.configure(function(){
   app.use(app.router);
   app.use(express.static(__dirname + '/public'));
   app.use(express.errorHandler({ dumpExceptions: true, showStack: true })); 
+});
+
+ekg.on('proc', function(proc){
+  if (proc.cpuPercent > 0.8) {
+    console.log('Process eating too much CPU. Exiting.');
+    process.exit();
+  }
 });
 
 /*
