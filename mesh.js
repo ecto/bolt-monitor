@@ -31,15 +31,6 @@ app.configure(function(){
   app.use(express.errorHandler({ dumpExceptions: true, showStack: true })); 
 });
 
-ekg.on('proc', function(proc){
-  console.log(proc.cpuPercent);
-  if (proc.cpuPercent > 80) {
-    console.log('Process eating too much CPU. Exiting.');
-    process.exit();
-  }
-});
-ekg.start(1000);
-
 /*
  * HTTP server
  * Render a page displaying the status of the mesh
