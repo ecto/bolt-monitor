@@ -20,7 +20,7 @@
     "colors": "0.x.x",
     "forever": "0.7.x",
     "hat": "0.0.x",
-    "express": "2.4.x",
+    "express": "*",
     "ejs": "0.4.x",
     "jeans": "0.1.x",
     "socket.io": "0.8.x",
