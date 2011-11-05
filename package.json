@@ -23,7 +23,7 @@
     "express": "*",
     "ejs": "0.4.x",
     "jeans": "0.1.x",
-    "socket.io": "0.8.x",
+    "socket.io": "0.8.7",
     "knife": "0.0.x"
   },
   "devDependencies": {
