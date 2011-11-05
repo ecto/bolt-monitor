@@ -15,7 +15,6 @@ var crypto  = require('crypto'),
     net     = require('net'),
     rack    = require('hat').rack(),
     knife   = require('knife'),
-    ekg     = require('ekg'),
     pool    = [];
 
 app.configure(function(){
