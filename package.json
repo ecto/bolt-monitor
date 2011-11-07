@@ -1,12 +1,12 @@
 {
   "author": "Cam Pedersen <cam@onswipe.com> (http://campedersen.com/)",
-  "name": "bolt-server",
-  "version": "0.0.11",
+  "name": "bolt-monitor",
+  "version": "0.0.0",
   "homepage": "http://bolt.io/",
   "preferGlobal": true,
   "repository": {
     "type": "git",
-    "url": "git://github.com/ecto/bolt-server.git"
+    "url": "git://github.com/ecto/bolt-monitor.git"
   },
   "scripts": {
     "test": "vows --spec test/*"
