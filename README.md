@@ -1,16 +1,18 @@
-# bolt-server
+# bolt-monitor
 
-![bolt-server](http://f.cl.ly/items/3V211X3u2O1S3V1y211W/Screen%20Shot%202011-09-25%20at%201.50.51%20AM.png)
+a dead-simple application to monitor bolt event traffic
+
+![bolt-server](http://f.cl.ly/items/473a3X2A1y1N361d4541/Screen%20Shot%202011-11-07%20at%202.21.13%20PM.png)
 
 ## install
 
-    npm install -g bolt-server
+    npm install -g bolt-monitor
 
 ## usage
 
-    bolt start
+    bolt-monitor start
 
-    bolt stop
+    bolt-monitor stop
 
 ## license
 

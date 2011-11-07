@@ -14,7 +14,9 @@
   "engines": {
     "node": "*"
   },
-  "bin": { "bolt": "./bin/bolt" },
+  "bin": {
+    "bolt-monitor": "./bin/bolt-monitor"
+  },
   "dependencies": {
     "nomnom": "1.0.x",
     "colors": "0.x.x",
