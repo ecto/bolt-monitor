@@ -15,57 +15,61 @@ var crypto  = require('crypto'),
     net     = require('net'),
     rack    = require('hat').rack(),
     knife   = require('knife'),
-    ekg     = require('ekg'),
+    cluster = require('cluster'),
+    numCPUs = require('os').cpus().length,
     pool    = [];
 
-app.configure(function(){
-  app.set('views', __dirname + '/views');
-  app.set('view engine', 'ejs');
-  app.use(express.logger());
-  app.use(express.bodyParser());
-  app.use(express.methodOverride());
-  app.use(express.cookieParser());
-  app.use(express.session({ secret: 'your secret here' }));
-  app.use(app.router);
-  app.use(express.static(__dirname + '/public'));
-  app.use(express.errorHandler({ dumpExceptions: true, showStack: true })); 
-});
+if (cluster.isMaster) {
 
-ekg.on('proc', function(proc){
-  console.log(proc.cpuPercent);
-  if (proc.cpuPercent > 80) {
-    console.log('Process eating too much CPU. Exiting.');
-    process.exit();
+  for (var i = 0; i < numCPUs; i++) {
+    cluster.fork();
   }
-});
-ekg.start(1000);
 
-/*
- * HTTP server
- * Render a page displaying the status of the mesh
- */
-app.get('/', function(req, res){
-  res.render('index', {
-    title: 'status'
+  cluster.on('death', function(worker) {
+    cluster.fork();
+    console.log('worker ' + worker.pid + ' died');
   });
-});
 
-app.get('/pool', function(req, res){
-  var p = [];
-  for (var id in pool) {
-    var c = {
-      id: id,
-      join: pool[id].join
+  app.configure(function(){
+    app.set('views', __dirname + '/views');
+    app.set('view engine', 'ejs');
+    app.use(express.logger());
+    app.use(express.bodyParser());
+    app.use(express.methodOverride());
+    app.use(express.cookieParser());
+    app.use(express.session({ secret: 'your secret here' }));
+    app.use(app.router);
+    app.use(express.static(__dirname + '/public'));
+    app.use(express.errorHandler({ dumpExceptions: true, showStack: true })); 
+  });
+
+  /*
+   * HTTP server
+   * Render a page displaying the status of the mesh
+   */
+  app.get('/', function(req, res){
+    res.render('index', {
+      title: 'status'
+    });
+  });
+
+  app.get('/pool', function(req, res){
+    var p = [];
+    for (var id in pool) {
+      var c = {
+        id: id,
+        join: pool[id].join
+      }
+      p.push(c);
     }
-    p.push(c);
-  }
-  res.send(p);
-});
+    res.send(p);
+  });
 
-app.listen(80);
+  app.listen(80);
 
-var io = require('socket.io').listen(app);
-io.set('log level', 0);
+  var io = require('socket.io').listen(app);
+  io.set('log level', 0);
+}
 
 var messageBuffer = '';
 
