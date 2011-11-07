@@ -36,6 +36,6 @@ var r = redis.createClient();
 
 r.psubscribe('bolt::*');
 
-r.on('pmessage', function(){
-  console.log(arguments);
+r.on('pmessage', function(pattern, channel, message){
+  io.sockets.emit('message', message);
 });
