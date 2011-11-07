@@ -7,11 +7,11 @@ var parser  = require('nomnom'),
 
 parser.command('start')
   .callback(start)
-  .help('start the bolt server');
+  .help('start the bolt monitor');
 
 parser.command('stop')
   .callback(stop)
-  .help('stop the bolt server');
+  .help('stop the bolt monitor');
 
 parser.command('set')
   .callback(set)
@@ -38,7 +38,7 @@ function start(){
     console.log('Try: ' + 'sudo !!'.green);
   } else {
     console.log('Starting bolt-server...'.magenta);
-    var file = __dirname + '/../mesh.js';
+    var file = __dirname + '/../bolt-monitor.js';
     forever.list(null, function(err, procs){
       var running = false;
       if (procs) {
@@ -63,7 +63,7 @@ function stop(){
     console.log('Try: ' + 'sudo !!'.green);
   } else {
     console.log('Stopping bolt-server...'.magenta);
-    var file = __dirname + '/../mesh.js';
+    var file = __dirname + '/../bolt-monitor.js';
     forever.cli.stop(file);
     console.log('Done!'.green);
   }
