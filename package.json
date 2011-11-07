@@ -19,12 +19,11 @@
     "nomnom": "1.0.x",
     "colors": "0.x.x",
     "forever": "0.7.x",
-    "hat": "0.0.x",
     "express": "*",
     "ejs": "0.4.x",
     "jeans": "0.1.x",
     "socket.io": "0.8.7",
-    "knife": "0.0.x"
+    "redis": "*"
   },
   "devDependencies": {
     "vows": "0.5.x"
