@@ -1,3 +1,4 @@
+[![build status](https://secure.travis-ci.org/ecto/bolt-monitor.png)](http://travis-ci.org/ecto/bolt-monitor)
 # bolt-monitor
 
 a dead-simple application to monitor bolt event traffic
